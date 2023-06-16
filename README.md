@@ -1,2 +1,2 @@
-# IMAVD_Video
- Vídeo Project present to IMAVD - ISEP
+# ReconhecimentoFacial
+Projeto Final LPIII responsável por realizar o reconhecimento facial

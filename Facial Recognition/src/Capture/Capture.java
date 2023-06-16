@@ -1,0 +1,332 @@
+package Capture;
+
+import Util.ConectaBanco;
+import Util.ControlPerson;
+import Util.ModelPerson;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.nio.IntBuffer;
+import javax.imageio.ImageIO;
+import javax.swing.JOptionPane;
+import org.bytedeco.javacpp.BytePointer;
+import org.bytedeco.opencv.global.opencv_imgproc;
+//import static org.bytedeco.javacp.opencv_imgcodecs.CV_LOAD_IMAGE_GRAYSCALE;
+import static org.bytedeco.opencv.global.opencv_imgproc.COLOR_BGRA2GRAY;
+import static org.bytedeco.opencv.global.opencv_imgproc.CV_GRAY2BGR;
+import static org.bytedeco.opencv.global.opencv_imgproc.COLOR_BGR2BGR555;
+import static org.bytedeco.opencv.global.opencv_imgproc.rectangle;
+import org.bytedeco.opencv.opencv_core.Mat;
+import org.bytedeco.opencv.*;
+import org.bytedeco.opencv.global.opencv_core;
+import static org.bytedeco.opencv.global.opencv_core.CV_32SC1;
+import org.bytedeco.opencv.global.opencv_imgcodecs;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imencode;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imread;
+import static org.bytedeco.opencv.global.opencv_imgcodecs.imwrite;
+import static org.bytedeco.opencv.global.opencv_imgproc.cvtColor;
+import org.bytedeco.opencv.opencv_core.MatVector;
+import org.bytedeco.opencv.opencv_core.Rect;
+import org.bytedeco.opencv.opencv_core.RectVector;
+import org.bytedeco.opencv.opencv_core.Scalar;
+import org.bytedeco.opencv.opencv_core.Size;
+import org.bytedeco.opencv.opencv_face.FaceRecognizer;
+import org.bytedeco.opencv.opencv_face.LBPHFaceRecognizer;
+import org.bytedeco.opencv.opencv_objdetect.CascadeClassifier;
+import org.bytedeco.opencv.opencv_videoio.VideoCapture;
+
+/**
+ *
+ * @author Kenny
+ */
+public class Capture extends javax.swing.JFrame {
+
+    private Capture.DaemonThread myThread = null;
+
+    //JavaCV
+    VideoCapture webSource = null;
+    Mat cameraImage = new Mat();
+    CascadeClassifier cascade = new CascadeClassifier("C:\\Users\\eddu_\\OneDrive\\Imagens\\recognition\\haarcascade_frontalface_alt.xml");
+    BytePointer mem = new BytePointer();
+    RectVector detectedFaces = new RectVector();
+
+    //Vars
+    String root, firstNamePerson, lastNamePerson, officerPerson, dobPerson;
+    int numSamples = 25, sample = 1, idPerson;
+
+    //Utils
+    ConectaBanco conecta = new ConectaBanco();
+
+    public Capture(int id, String fName, String lName, String office, String dob) {
+        initComponents();
+
+        idPerson = id;
+        firstNamePerson = fName;
+        lastNamePerson = lName;
+        officerPerson = office;
+        dobPerson = dob;
+
+        startCamera();
+    }
+
+    private Capture() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        label_photo = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        counterLabel = new javax.swing.JLabel();
+        saveButton = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Security System - Capture Photo");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("CAPTURE 25 SNAPSHOTS");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -4, 250, 50));
+
+        label_photo.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(200, 200, 200))); // NOI18N
+        jPanel1.add(label_photo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 60, 330, 430));
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        counterLabel.setBackground(new java.awt.Color(72, 120, 200));
+        counterLabel.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        counterLabel.setForeground(new java.awt.Color(255, 255, 255));
+        counterLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        counterLabel.setText("00");
+        counterLabel.setOpaque(true);
+        jPanel2.add(counterLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 0, 100, 60));
+
+        saveButton.setBackground(new java.awt.Color(73, 174, 117));
+        saveButton.setForeground(new java.awt.Color(255, 255, 255));
+        saveButton.setText("Capture");
+        saveButton.setContentAreaFilled(false);
+        saveButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        saveButton.setOpaque(true);
+        saveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                saveButtonActionPerformed(evt);
+            }
+        });
+        jPanel2.add(saveButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(95, 70, 130, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, 330, 100));
+
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jButton1.setText("Close");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, -1, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 350, 40));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 360, 610));
+
+        setSize(new java.awt.Dimension(368, 650));
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_saveButtonActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        stopCamera();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Capture.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Capture.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Capture.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Capture.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Capture().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel counterLabel;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel label_photo;
+    private javax.swing.JButton saveButton;
+    // End of variables declaration//GEN-END:variables
+
+    class DaemonThread implements Runnable {
+
+        protected volatile boolean runnable = false;
+
+        @Override
+        public void run() {
+            synchronized (this) {
+                while (runnable) {
+                    try {
+                        if (webSource.grab()) {
+                            webSource.retrieve(cameraImage);
+                            Graphics g = label_photo.getGraphics(); //mostra a imagem no jlabel
+                            Mat imageColor = new Mat(); //imagem colorida
+                            imageColor = cameraImage;
+
+                            Mat imageGray = new Mat(); //imagem pb
+                            cvtColor(imageColor, imageGray, COLOR_BGRA2GRAY);
+//                            flip(cameraImage, cameraImage, +1);
+
+                            RectVector detectedFaces = new RectVector(); //face detectada
+                            cascade.detectMultiScale(imageColor, detectedFaces, 1.1, 1, 1, new Size(150, 150), new Size(500, 500));
+
+                            for (int i = 0; i < detectedFaces.size(); i++) { //repetição pra encontrar as faces
+
+                                Rect dadosFace = detectedFaces.get(0);
+                                rectangle(imageColor, dadosFace, new Scalar(255, 255, 255, 5));
+                                Mat face = new Mat(imageGray, dadosFace);
+                                opencv_imgproc.resize(face, face, new Size(160, 160));
+
+                                if (saveButton.getModel().isPressed()) { //quando apertar o botão saveButton
+                                    if (sample <= numSamples) {
+                                        String cropped = "C:\\Users\\eddu_\\OneDrive\\Imagens\\recognition\\person." + idPerson + "." + sample + ".jpg";
+                                        imwrite(cropped, face);
+
+                                        counterLabel.setText(String.valueOf(sample));
+                                        sample++;
+                                    }
+
+                                    if (sample > 25) {
+                                        generate();
+                                        insertDatabase();
+                                        System.out.println("File Generated");
+                                        stopCamera();
+                                    }
+                                }
+                            }
+
+                            imencode(".bmp", cameraImage, mem);
+                            Image im = ImageIO.read(new ByteArrayInputStream(mem.getStringBytes()));
+                            BufferedImage buff = (BufferedImage) im;
+                            try {
+                                if (g.drawImage(buff, 0, 0, 360, 390, 0, 0, buff.getWidth(), buff.getHeight(), null)) {
+                                    if (runnable == false) {
+                                        System.out.println("Salve a Foto");
+                                        this.wait();
+                                    }
+                                }
+                            } catch (Exception e) {
+                            }
+                        }
+
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+
+    public void generate() {
+        File directory = new File("C:\\Users\\eddu_\\OneDrive\\Imagens\\recognition\\");
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".jpg") || name.endsWith(".png");
+            }
+        };
+
+        File[] files = directory.listFiles(filter); //only oour filter
+        MatVector photos = new MatVector(files.length);
+        Mat labels = new Mat(files.length, 1, CV_32SC1);
+        IntBuffer labelsBuffer = labels.createBuffer();
+
+        int counter = 0;
+        for (File image : files) {
+            Mat photo = imread(image.getAbsolutePath(), COLOR_BGR2BGR555/* COLOR_BGRA2GRAY COLOR_BGR2BGR555 CV_GRAY2BGR CV_LOAD_IMAGE_GRAYSCALE*/);
+            int idP = Integer.parseInt(image.getName().split("\\.")[1]);
+            opencv_imgproc.resize(photo, photo, new Size(160, 160));
+
+            photos.put(counter, photo);
+            labelsBuffer.put(counter, idP);
+            counter++;
+        }
+
+        FaceRecognizer lbph = LBPHFaceRecognizer.create();
+        lbph.train(photos, labels);
+        lbph.save("C:\\Users\\eddu_\\OneDrive\\Imagens\\recognition\\classifierLBPH.yml");
+    }
+
+    public void insertDatabase() {
+        ControlPerson cod = new ControlPerson();
+        ModelPerson mod = new ModelPerson();
+        
+        mod.setId(idPerson);
+        mod.setFirst_name(firstNamePerson);
+        mod.setLast_name(lastNamePerson);
+        mod.setDob(dobPerson);
+        mod.setOfficer(officerPerson);
+        cod.inserir(mod);
+    }
+
+    public void stopCamera() {
+        myThread.runnable = false;
+        webSource.release();
+        dispose();
+    }
+
+    public void startCamera() {
+        webSource = new VideoCapture(0);
+        myThread = new Capture.DaemonThread();
+        Thread t = new Thread(myThread);
+        t.setDaemon(true);
+        myThread.runnable = true;
+        t.start();
+    }
+}
