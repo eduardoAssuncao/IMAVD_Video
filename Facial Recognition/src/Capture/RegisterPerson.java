@@ -62,7 +62,7 @@ public class RegisterPerson extends javax.swing.JFrame {
         jPanel3.add(txt_office, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, 180, -1));
 
         jLabel2.setForeground(new java.awt.Color(100, 100, 100));
-        jLabel2.setText("Office (cargo):");
+        jLabel2.setText("Info:");
         jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 120, -1, -1));
 
         jLabel3.setForeground(new java.awt.Color(100, 100, 100));

@@ -78,8 +78,8 @@ public class Recognizer extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         label_photo = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        labelOffice = new javax.swing.JLabel();
         label_name = new javax.swing.JLabel();
+        labelOffice = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
@@ -92,18 +92,10 @@ public class Recognizer extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         label_photo.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 12), new java.awt.Color(200, 200, 200))); // NOI18N
-        jPanel1.add(label_photo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 330, 440));
+        jPanel1.add(label_photo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 50, 330, 440));
 
         jPanel2.setBackground(new java.awt.Color(255, 255, 255));
         jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        labelOffice.setBackground(new java.awt.Color(72, 120, 200));
-        labelOffice.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        labelOffice.setForeground(new java.awt.Color(255, 255, 255));
-        labelOffice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        labelOffice.setText("Office");
-        labelOffice.setOpaque(true);
-        jPanel2.add(labelOffice, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 320, 40));
 
         label_name.setBackground(new java.awt.Color(72, 120, 200));
         label_name.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -111,9 +103,18 @@ public class Recognizer extends javax.swing.JFrame {
         label_name.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         label_name.setText("First - Lastname");
         label_name.setOpaque(true);
-        jPanel2.add(label_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 320, 40));
+        jPanel2.add(label_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 630, 40));
 
-        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 500, 330, 100));
+        labelOffice.setBackground(new java.awt.Color(72, 120, 200));
+        labelOffice.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        labelOffice.setForeground(new java.awt.Color(255, 255, 255));
+        labelOffice.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelOffice.setText("Info");
+        labelOffice.setAutoscrolls(true);
+        labelOffice.setOpaque(true);
+        jPanel2.add(labelOffice, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 630, 110));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, 650, 170));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -123,13 +124,13 @@ public class Recognizer extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 10, -1, -1));
+        jPanel3.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 10, -1, -1));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 360, 40));
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 3, 660, 40));
 
-        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 360, 610));
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 670, 670));
 
-        setSize(new java.awt.Dimension(358, 616));
+        setSize(new java.awt.Dimension(675, 672));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
