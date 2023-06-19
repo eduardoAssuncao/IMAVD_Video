@@ -30,6 +30,8 @@ import static org.bytedeco.opencv.global.opencv_imgproc.rectangle;
 import org.bytedeco.opencv.opencv_core.Rect;
 import com.sun.speech.freetts.Voice;
 import com.sun.speech.freetts.VoiceManager;
+import java.awt.Point;
+import org.bytedeco.opencv.opencv_core.AbstractScalar;
 
 /**
  *
@@ -80,6 +82,8 @@ public class Recognizer extends javax.swing.JFrame {
         jPanel2 = new javax.swing.JPanel();
         label_name = new javax.swing.JLabel();
         labelOffice = new javax.swing.JLabel();
+        objecName = new javax.swing.JLabel();
+        objectTest = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
 
@@ -114,6 +118,17 @@ public class Recognizer extends javax.swing.JFrame {
         labelOffice.setOpaque(true);
         jPanel2.add(labelOffice, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 50, 630, 110));
 
+        objecName.setText("Object");
+        jPanel2.add(objecName, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 440, -1, -1));
+        objecName.getAccessibleContext().setAccessibleParent(jPanel2);
+
+        objectTest.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                objectTestComponentShown(evt);
+            }
+        });
+        jPanel2.add(objectTest, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 50, 30));
+
         jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, 650, 170));
 
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -137,6 +152,10 @@ public class Recognizer extends javax.swing.JFrame {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         stopCamera();
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void objectTestComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_objectTestComponentShown
+        // TODO add your handling code here:
+    }//GEN-LAST:event_objectTestComponentShown
 
     /**
      * @param args the command line arguments
@@ -181,6 +200,8 @@ public class Recognizer extends javax.swing.JFrame {
     private javax.swing.JLabel labelOffice;
     private javax.swing.JLabel label_name;
     private javax.swing.JLabel label_photo;
+    private javax.swing.JLabel objecName;
+    private javax.swing.JLabel objectTest;
     // End of variables declaration//GEN-END:variables
 
     class DaemonThread implements Runnable {
@@ -204,7 +225,7 @@ public class Recognizer extends javax.swing.JFrame {
 
                             for (int i = 0; i < detectedFace.size(); i++) {
                                 Rect dadosFace = detectedFace.get(i);
-                                rectangle(cameraImage, dadosFace, new Scalar(0, 255, 0, 3), 3, 0, 0);
+                                //rectangle(cameraImage, dadosFace, new Scalar(0, 255, 0, 3), 3, 0, 0);
                                 Mat faceCapturada = new Mat(imageGray, dadosFace);
                                 opencv_imgproc.resize(faceCapturada, faceCapturada, new Size(160, 160));
 
@@ -213,25 +234,57 @@ public class Recognizer extends javax.swing.JFrame {
                                 recognizer.predict(faceCapturada, rotulo, confidence);
                                 int prediction = rotulo.get(0);
                                 String name = null;
-                                //String nome;
-                                //nome = firstNamePerson;
 
                                 if (prediction == -1) {
-                                    //rectangle(cameraImage, dadosFace, new Scalar(0, 0, 255, 3), 3, 0, 0);
-                                    //idPerson = 0;
+                                    // Pessoa desconhecida
                                     label_name.setText("Desconhecido");
                                     labelOffice.setText("");
                                     idPerson = 0;
-                                    //label_office.setText("");
-                                    
                                 } else {
-                                    //rectangle(cameraImage, dadosFace, new Scalar(0, 255, 0, 3), 3, 0, 0);
+                                    // Pessoa reconhecida
                                     System.out.println(confidence.get(0));
                                     idPerson = prediction;
-//                                    System.out.println("PESSOA RECONHECIDA COMO: " + idPerson);
                                     rec();
+
+                                    // Desenhar forma com base na pessoa reconhecida
+                                    String personName = label_name.getText();
+                                    String objectNameT = objectTest.getText();
+                                    if (objectNameT.equals("Retangle")) {
+                                        // Criar retângulo verde
+                                        rectangle(cameraImage, dadosFace, new Scalar(0, 255, 0, 3), 3, 0, 0);
+                                        
+                                    } else if (objectNameT.equals("Circle")) {
+                                        // Criar círculo azul
+                                        int centerX = dadosFace.x() + dadosFace.width() / 2;
+                                        int centerY = dadosFace.y() + dadosFace.height() / 2;
+                                        int radius = dadosFace.width() / 2;
+                                        org.bytedeco.opencv.global.opencv_imgproc.circle(
+                                                cameraImage,
+                                                new org.bytedeco.opencv.opencv_core.Point(centerX, centerY),
+                                                radius,
+                                                new Scalar(255, 0, 0, 3),
+                                                3,
+                                                0,
+                                                0
+                                        );
+                                        
+                                    }
+                                     else if (objectNameT.equals("Line")) {
+                                        // Criar linha vermelha
+                                        org.bytedeco.opencv.global.opencv_imgproc.line(
+                                                cameraImage,
+                                                new org.bytedeco.opencv.opencv_core.Point(dadosFace.x(), dadosFace.y()),
+                                                new org.bytedeco.opencv.opencv_core.Point(dadosFace.x() + dadosFace.width(), dadosFace.y() + dadosFace.height()),
+                                                new Scalar(0, 0, 255, 3),
+                                                3,
+                                                0,
+                                                0
+                                        );
+                                        
+                                    }
                                 }
-                            }
+                                                                }
+                            
 
                             imencode(".bmp", cameraImage, mem);
                             Image im = ImageIO.read(new ByteArrayInputStream(mem.getStringBytes()));
@@ -269,7 +322,7 @@ public class Recognizer extends javax.swing.JFrame {
                         contador++;
                         label_name.setText(conecta.rs.getString("first_name") + " " + conecta.rs.getString("last_name"));
                         labelOffice.setText(conecta.rs.getString("office"));
-                        
+                        objectTest.setText(conecta.rs.getString("object"));
                         //Welcome Voice
                         String personName = conecta.rs.getString("first_name") + " " + conecta.rs.getString("last_name");
                         System.out.println("Contador:" + contador);

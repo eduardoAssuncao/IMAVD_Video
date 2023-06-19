@@ -55,19 +55,20 @@ public class Capture extends javax.swing.JFrame {
     RectVector detectedFaces = new RectVector();
 
     //Vars
-    String root, firstNamePerson, lastNamePerson, officerPerson, dobPerson;
+    String root, firstNamePerson, lastNamePerson, officerPerson, dobPerson, objectName;
     int numSamples = 25, sample = 1, idPerson;
 
     //Utils
     ConectaBanco conecta = new ConectaBanco();
 
-    public Capture(int id, String fName, String lName, String office, String dob) {
+    public Capture(int id, String fName, String lName, String office, String dob, String object) {
         initComponents();
 
         idPerson = id;
         firstNamePerson = fName;
         lastNamePerson = lName;
         officerPerson = office;
+        objectName = object;
         dobPerson = dob;
 
         startCamera();
@@ -312,6 +313,7 @@ public class Capture extends javax.swing.JFrame {
         mod.setLast_name(lastNamePerson);
         mod.setDob(dobPerson);
         mod.setOfficer(officerPerson);
+        mod.setObject(objectName);
         cod.inserir(mod);
     }
 

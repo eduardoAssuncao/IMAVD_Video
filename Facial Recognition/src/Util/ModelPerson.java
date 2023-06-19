@@ -11,17 +11,19 @@ public class ModelPerson {
     private String last_name;
     private String dob;
     private String officer;
+    private String object;
 
     public ModelPerson() {
     
     }
 
-    public ModelPerson(int id, String first_name, String last_name, String dob, String officer) {
+    public ModelPerson(int id, String first_name, String last_name, String dob, String officer, String object) {
         this.id = id;
         this.first_name = first_name;
         this.last_name = last_name;
         this.dob = dob;
         this.officer = officer;
+        this.object = object;
     }
 
     public int getId() {
@@ -64,5 +66,11 @@ public class ModelPerson {
         this.officer = officer;
     }
     
+    public String getObject(){
+        return object;
+    }
     
+    public void setObject(String object){
+        this.object = object;
+    }
 }

@@ -37,6 +37,8 @@ public class RegisterPerson extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         txt_dob = new javax.swing.JFormattedTextField();
+        txt_object = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -59,6 +61,12 @@ public class RegisterPerson extends javax.swing.JFrame {
         jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
         jPanel3.add(txt_last_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 180, -1));
         jPanel3.add(txt_first_name, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 60, 180, -1));
+
+        txt_office.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_officeActionPerformed(evt);
+            }
+        });
         jPanel3.add(txt_office, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 140, 180, -1));
 
         jLabel2.setForeground(new java.awt.Color(100, 100, 100));
@@ -84,7 +92,18 @@ public class RegisterPerson extends javax.swing.JFrame {
         }
         jPanel3.add(txt_dob, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 140, 180, -1));
 
-        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 520, 190));
+        txt_object.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_objectActionPerformed(evt);
+            }
+        });
+        jPanel3.add(txt_object, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 190, 180, -1));
+
+        jLabel6.setForeground(new java.awt.Color(100, 100, 100));
+        jLabel6.setText("Object:");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 170, -1, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 520, 220));
 
         jButton1.setBackground(new java.awt.Color(56, 131, 48));
         jButton1.setForeground(new java.awt.Color(255, 255, 255));
@@ -97,7 +116,7 @@ public class RegisterPerson extends javax.swing.JFrame {
                 jButton1ActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, 110, -1));
+        jPanel1.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 330, 110, -1));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -107,7 +126,9 @@ public class RegisterPerson extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 367, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 359, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 40, Short.MAX_VALUE))
         );
 
         setSize(new java.awt.Dimension(554, 406));
@@ -119,13 +140,22 @@ public class RegisterPerson extends javax.swing.JFrame {
         String lName = txt_last_name.getText();
         String dob = txt_dob.getText();
         String office = txt_office.getText();
+        String object = txt_object.getText();
         int id = Integer.parseInt(txt_id_label.getText().replace("ID: ", ""));
         System.out.println(id);
         
-        new Capture(id, fName, lName, office, dob).setVisible(true);
+        new Capture(id, fName, lName, office, dob, object).setVisible(true);
 
         //Test
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txt_officeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_officeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_officeActionPerformed
+
+    private void txt_objectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_objectActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_objectActionPerformed
 
     /**
      * @param args the command line arguments
@@ -168,6 +198,7 @@ public class RegisterPerson extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -175,6 +206,7 @@ public class RegisterPerson extends javax.swing.JFrame {
     private javax.swing.JTextField txt_first_name;
     private javax.swing.JLabel txt_id_label;
     private javax.swing.JTextField txt_last_name;
+    private javax.swing.JTextField txt_object;
     private javax.swing.JTextField txt_office;
     // End of variables declaration//GEN-END:variables
 
